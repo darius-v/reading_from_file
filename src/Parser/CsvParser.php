@@ -1,0 +1,37 @@
+<?php
+
+namespace App\Parser;
+
+/**
+ * Parses CSV file content into an array of associative rows.
+ */
+class CsvParser implements ParserInterface
+{
+    /**
+     * @param  string $content Raw CSV content.
+     * @return array<int, array<string, mixed>>
+     */
+    public function parse(string $content): array
+    {
+        $lines = array_filter(explode("\n", trim($content)));
+        $rows  = array_map(fn($line) => $this->parseLine($line), array_values($lines));
+
+        $headers = array_shift($rows);
+
+        return array_map(fn($row) => array_combine($headers, $row), $rows);
+    }
+
+    /**
+     * Splits a CSV line and strips surrounding single quotes.
+     *
+     * @param  string $line
+     * @return array<int, string>
+     */
+    private function parseLine(string $line): array
+    {
+        return array_map(
+            fn($value) => trim($value, "' \t"),
+            explode(',', $line)
+        );
+    }
+}
