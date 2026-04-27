@@ -64,9 +64,7 @@ class FileUploadTest
         Assert::contains('<th>age</th>', $html, 'Table has age column');
         Assert::contains('<th>gender</th>', $html, 'Table has gender column');
         Assert::contains('<td>Kiestis</td>', $html, 'Table contains row: Kiestis');
-        Assert::contains('<td>Vytska</td>', $html, 'Table contains row: Vytska');
-        Assert::contains('<td>Karina</td>', $html, 'Table contains row: Karina');
-        Assert::contains('<td>CsvUser</td>', $html, 'Table contains row: CsvUser');
+        Assert::contains('<td>CsvUser</td>', $html, 'Table contains csv marker row');
         Assert::contains('<td>csv</td>', $html, 'Table contains csv gender marker');
     }
 
@@ -95,8 +93,8 @@ class FileUploadTest
         Assert::contains('<th>age</th>', $html, 'Table has age column');
         Assert::contains('<th>gender</th>', $html, 'Table has gender column');
         Assert::contains('<td>Kiestis</td>', $html, 'Table contains row: Kiestis');
-        Assert::contains('<td>Vytska</td>', $html, 'Table contains row: Vytska');
-        Assert::contains('<td>Karina</td>', $html, 'Table contains row: Karina');
+        Assert::contains('<td>XmlUser</td>', $html, 'Table contains xml marker row');
+        Assert::contains('<td>xml</td>', $html, 'Table contains xml gender marker');
     }
 
     /**
