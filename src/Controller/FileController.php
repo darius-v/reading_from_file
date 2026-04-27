@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Factory\ParserFactory;
+use App\Validator\FileValidator;
 
 /**
  * Handles file upload and parsed data display.
@@ -10,13 +11,16 @@ use App\Factory\ParserFactory;
 class FileController
 {
     private ParserFactory $parserFactory;
+    private FileValidator $validator;
 
     /**
      * @param ParserFactory $parserFactory
+     * @param FileValidator $validator
      */
-    public function __construct(ParserFactory $parserFactory)
+    public function __construct(ParserFactory $parserFactory, FileValidator $validator)
     {
         $this->parserFactory = $parserFactory;
+        $this->validator     = $validator;
     }
 
     /**
@@ -46,22 +50,21 @@ class FileController
      */
     private function handleUpload(): array
     {
-        $file = $_FILES['file'] ?? null;
+        $file   = $_FILES['file'] ?? [];
+        $errors = $this->validator->validate($file);
 
-        if (!$file || $file['error'] !== UPLOAD_ERR_OK) {
-            return [['No file uploaded or upload error.'], []];
+        if (!empty($errors)) {
+            return [$errors, []];
         }
 
         $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 
         try {
             $parser = $this->parserFactory->create($extension);
+            $rows   = $parser->parse(file_get_contents($file['tmp_name']));
         } catch (\InvalidArgumentException $e) {
             return [[$e->getMessage()], []];
         }
-
-        $content = file_get_contents($file['tmp_name']);
-        $rows    = $parser->parse($content);
 
         return [[], $rows];
     }
