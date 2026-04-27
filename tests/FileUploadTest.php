@@ -69,6 +69,35 @@ class FileUploadTest
     }
 
     /**
+     * Verifies that uploading an XML file renders a table with the correct data.
+     * Reads the form first to discover the actual file input name and action.
+     *
+     * @return void
+     */
+    public function testXmlUploadRendersTable(): void
+    {
+        echo "testXmlUploadRendersTable\n";
+
+        $formHtml  = $this->client->get($this->baseUrl . '/');
+        $action    = FormParser::extractFormAction($formHtml, $this->baseUrl);
+        $fieldName = FormParser::extractFileInputName($formHtml);
+
+        $html = $this->client->post(
+            $action,
+            [],
+            [$fieldName => __DIR__ . '/fixtures/test.xml']
+        );
+
+        Assert::hasTag($html, 'table', 'Response contains a table');
+        Assert::contains('<th>first_name</th>', $html, 'Table has first_name column');
+        Assert::contains('<th>age</th>', $html, 'Table has age column');
+        Assert::contains('<th>gender</th>', $html, 'Table has gender column');
+        Assert::contains('<td>Kiestis</td>', $html, 'Table contains row: Kiestis');
+        Assert::contains('<td>Vytska</td>', $html, 'Table contains row: Vytska');
+        Assert::contains('<td>Karina</td>', $html, 'Table contains row: Karina');
+    }
+
+    /**
      * Runs all tests in this class.
      *
      * @return void
@@ -77,5 +106,6 @@ class FileUploadTest
     {
         $this->testFormIsVisible();
         $this->testCsvUploadRendersTable();
+        $this->testXmlUploadRendersTable();
     }
 }

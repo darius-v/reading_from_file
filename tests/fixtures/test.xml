@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<items>
+    <item>
+        <first_name>Kiestis</first_name>
+        <age>29</age>
+        <gender>male</gender>
+    </item>
+    <item>
+        <first_name>Vytska</first_name>
+        <age>32</age>
+        <gender>male</gender>
+    </item>
+    <item>
+        <first_name>Karina</first_name>
+        <age>25</age>
+        <gender>female</gender>
+    </item>
+    <item>
+        <first_name>XmlUser</first_name>
+        <age>0</age>
+        <gender>xml</gender>
+    </item>
+</items>
