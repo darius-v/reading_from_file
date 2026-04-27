@@ -127,6 +127,62 @@ class FileUploadTest
     }
 
     /**
+     * Verifies that submitting the form without a file shows an error.
+     *
+     * @return void
+     */
+    public function testNoFileShowsError(): void
+    {
+        echo "testNoFileShowsError\n";
+
+        $formHtml = $this->client->get($this->baseUrl . '/');
+        $action   = FormParser::extractFormAction($formHtml, $this->baseUrl);
+
+        $html = $this->client->post($action);
+
+        Assert::contains('No file uploaded or upload failed.', $html, 'Shows no-file error');
+        Assert::hasNoTag($html, 'table', 'No table shown on error');
+    }
+
+    /**
+     * Verifies that uploading an unsupported format shows an error.
+     *
+     * @return void
+     */
+    public function testUnsupportedFormatShowsError(): void
+    {
+        echo "testUnsupportedFormatShowsError\n";
+
+        $formHtml  = $this->client->get($this->baseUrl . '/');
+        $action    = FormParser::extractFormAction($formHtml, $this->baseUrl);
+        $fieldName = FormParser::extractFileInputName($formHtml);
+
+        $html = $this->client->post($action, [], [$fieldName => __DIR__ . '/fixtures/test.txt']);
+
+        Assert::contains('Unsupported file format', $html, 'Shows unsupported format error');
+        Assert::hasNoTag($html, 'table', 'No table shown on error');
+    }
+
+    /**
+     * Verifies that uploading an empty file shows an error.
+     *
+     * @return void
+     */
+    public function testEmptyFileShowsError(): void
+    {
+        echo "testEmptyFileShowsError\n";
+
+        $formHtml  = $this->client->get($this->baseUrl . '/');
+        $action    = FormParser::extractFormAction($formHtml, $this->baseUrl);
+        $fieldName = FormParser::extractFileInputName($formHtml);
+
+        $html = $this->client->post($action, [], [$fieldName => __DIR__ . '/fixtures/empty.csv']);
+
+        Assert::contains('The uploaded file is empty.', $html, 'Shows empty file error');
+        Assert::hasNoTag($html, 'table', 'No table shown on error');
+    }
+
+    /**
      * Runs all tests in this class.
      *
      * @return void
@@ -137,5 +193,8 @@ class FileUploadTest
         $this->testCsvUploadRendersTable();
         $this->testXmlUploadRendersTable();
         $this->testJsonUploadRendersTable();
+        $this->testNoFileShowsError();
+        $this->testUnsupportedFormatShowsError();
+        $this->testEmptyFileShowsError();
     }
 }

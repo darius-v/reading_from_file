@@ -41,6 +41,24 @@ class Assert
     }
 
     /**
+     * @param string $html
+     * @param string $tag
+     * @param string $message
+     * @return void
+     */
+    public static function hasNoTag(string $html, string $tag, string $message = ''): void
+    {
+        $dom = new \DOMDocument();
+        @$dom->loadHTML($html);
+
+        if ($dom->getElementsByTagName($tag)->length === 0) {
+            self::pass($message ?: "Has no tag <$tag>");
+        } else {
+            self::fail($message ?: "Expected no <$tag> tag in response");
+        }
+    }
+
+    /**
      * @param string $message
      * @return void
      */
