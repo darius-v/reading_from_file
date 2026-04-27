@@ -1,7 +1,8 @@
 <?php
 
-phpinfo();
+require __DIR__ . '/../autoload.php';
 
+use App\Controller\FileController;
 
-die; ?>
-
+$controller = new FileController();
+$controller->index();
