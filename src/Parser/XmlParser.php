@@ -28,13 +28,22 @@ class XmlParser implements ParserInterface
     }
 
     /**
-     * @throws Exception
+     * @param  string $content Raw XML content.
      * @return array<int, array<string, mixed>>
-     * @param string $content Raw XML content.
+     * @throws \InvalidArgumentException If the XML is malformed.
      */
     public function parse(string $content): array
     {
-        $xml  = new \SimpleXMLElement($content);
+        libxml_use_internal_errors(true);
+
+        try {
+            $xml = new \SimpleXMLElement($content);
+        } catch (\Exception $e) {
+            libxml_clear_errors();
+            throw new \InvalidArgumentException('Invalid XML: ' . $e->getMessage());
+        } finally {
+            libxml_use_internal_errors(false);
+        }
         $rows = [];
 
         foreach ($xml->children() as $child) {

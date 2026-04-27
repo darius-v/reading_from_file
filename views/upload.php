@@ -34,7 +34,7 @@
                 <?php foreach ($rows as $row): ?>
                     <tr>
                         <?php foreach ($row as $cell): ?>
-                            <td><?= htmlspecialchars((string) $cell) ?></td>
+                            <td><?= htmlspecialchars(is_scalar($cell) || $cell === null ? (string) $cell : json_encode($cell)) ?></td>
                         <?php endforeach; ?>
                     </tr>
                 <?php endforeach; ?>

@@ -183,6 +183,104 @@ class FileUploadTest
     }
 
     /**
+     * Verifies that malformed JSON shows an error and no table.
+     *
+     * @return void
+     */
+    public function testMalformedJsonShowsError(): void
+    {
+        echo "testMalformedJsonShowsError\n";
+
+        $formHtml  = $this->client->get($this->baseUrl . '/');
+        $action    = FormParser::extractFormAction($formHtml, $this->baseUrl);
+        $fieldName = FormParser::extractFileInputName($formHtml);
+
+        $html = $this->client->post($action, [], [$fieldName => __DIR__ . '/fixtures/malformed.json']);
+
+        Assert::contains('Invalid JSON', $html, 'Shows invalid JSON error');
+        Assert::hasNoTag($html, 'table', 'No table shown on error');
+    }
+
+    /**
+     * Verifies that malformed XML shows an error and no table.
+     *
+     * @return void
+     */
+    public function testMalformedXmlShowsError(): void
+    {
+        echo "testMalformedXmlShowsError\n";
+
+        $formHtml  = $this->client->get($this->baseUrl . '/');
+        $action    = FormParser::extractFormAction($formHtml, $this->baseUrl);
+        $fieldName = FormParser::extractFileInputName($formHtml);
+
+        $html = $this->client->post($action, [], [$fieldName => __DIR__ . '/fixtures/malformed.xml']);
+
+        Assert::contains('Invalid XML', $html, 'Shows invalid XML error');
+        Assert::hasNoTag($html, 'table', 'No table shown on error');
+    }
+
+    /**
+     * Verifies that XSS payloads in field values are escaped and not executed.
+     *
+     * @return void
+     */
+    public function testXssInValuesIsEscaped(): void
+    {
+        echo "testXssInValuesIsEscaped\n";
+
+        $formHtml  = $this->client->get($this->baseUrl . '/');
+        $action    = FormParser::extractFormAction($formHtml, $this->baseUrl);
+        $fieldName = FormParser::extractFileInputName($formHtml);
+
+        $html = $this->client->post($action, [], [$fieldName => __DIR__ . '/fixtures/xss.json']);
+
+        Assert::contains('&lt;script&gt;', $html, 'Script tag is HTML-escaped');
+        Assert::hasNoTag($html, 'script', 'No raw <script> tag in output');
+    }
+
+    /**
+     * Verifies that nested objects in JSON are rendered as a JSON string, not "Array".
+     *
+     * @return void
+     */
+    public function testNestedJsonObjectRendersAsString(): void
+    {
+        echo "testNestedJsonObjectRendersAsString\n";
+
+        $formHtml  = $this->client->get($this->baseUrl . '/');
+        $action    = FormParser::extractFormAction($formHtml, $this->baseUrl);
+        $fieldName = FormParser::extractFileInputName($formHtml);
+
+        $html = $this->client->post($action, [], [$fieldName => __DIR__ . '/fixtures/nested.json']);
+
+        Assert::hasTag($html, 'table', 'Table is rendered');
+        Assert::contains('Vilnius', $html, 'Nested object value is visible');
+        Assert::contains('&quot;city&quot;', $html, 'Nested object rendered as escaped JSON string');
+    }
+
+    /**
+     * Verifies that null and boolean JSON values render without warnings.
+     *
+     * @return void
+     */
+    public function testNullAndBooleanJsonValues(): void
+    {
+        echo "testNullAndBooleanJsonValues\n";
+
+        $formHtml  = $this->client->get($this->baseUrl . '/');
+        $action    = FormParser::extractFormAction($formHtml, $this->baseUrl);
+        $fieldName = FormParser::extractFileInputName($formHtml);
+
+        $html = $this->client->post($action, [], [$fieldName => __DIR__ . '/fixtures/nullbool.json']);
+
+        Assert::hasTag($html, 'table', 'Table is rendered');
+        Assert::contains('<td>Kiestis</td>', $html, 'String value renders correctly');
+        Assert::contains('<td>1</td>', $html, 'Boolean true renders as 1');
+        Assert::contains('<td></td>', $html, 'Null renders as empty cell');
+    }
+
+    /**
      * Runs all tests in this class.
      *
      * @return void
@@ -196,5 +294,10 @@ class FileUploadTest
         $this->testNoFileShowsError();
         $this->testUnsupportedFormatShowsError();
         $this->testEmptyFileShowsError();
+        $this->testMalformedJsonShowsError();
+        $this->testMalformedXmlShowsError();
+        $this->testXssInValuesIsEscaped();
+        $this->testNestedJsonObjectRendersAsString();
+        $this->testNullAndBooleanJsonValues();
     }
 }
