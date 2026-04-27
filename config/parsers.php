@@ -1,11 +1,16 @@
 <?php
 
 /**
- * Maps file extensions to their parser class.
- * To add a new format: add an entry here and create the corresponding parser.
+ * List of parser classes to register.
+ * To add a new format: create a parser implementing ParserInterface and add its class here.
  */
+
+use App\Parser\CsvParser;
+use App\Parser\JsonParser;
+use App\Parser\XmlParser;
+
 return [
-    'csv'  => \App\Parser\CsvParser::class,
-    'xml'  => \App\Parser\XmlParser::class,
-    'json' => \App\Parser\JsonParser::class,
+    CsvParser::class,
+    XmlParser::class,
+    JsonParser::class,
 ];

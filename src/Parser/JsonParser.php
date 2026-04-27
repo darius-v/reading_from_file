@@ -8,6 +8,23 @@ namespace App\Parser;
 class JsonParser implements ParserInterface
 {
     /**
+     * @param  string $extension
+     * @return bool
+     */
+    public function supports(string $extension): bool
+    {
+        return $extension === 'json';
+    }
+
+    /**
+     * @return string
+     */
+    public function getExtension(): string
+    {
+        return 'json';
+    }
+
+    /**
      * @param  string $content Raw JSON content.
      * @return array<int, array<string, mixed>>
      * @throws \InvalidArgumentException If the JSON is invalid.

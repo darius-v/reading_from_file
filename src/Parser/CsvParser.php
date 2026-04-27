@@ -22,6 +22,23 @@ class CsvParser implements ParserInterface
     }
 
     /**
+     * @param  string $extension
+     * @return bool
+     */
+    public function supports(string $extension): bool
+    {
+        return $extension === 'csv';
+    }
+
+    /**
+     * @return string
+     */
+    public function getExtension(): string
+    {
+        return 'csv';
+    }
+
+    /**
      * Splits a CSV line and strips surrounding single quotes.
      *
      * @param  string $line

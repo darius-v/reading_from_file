@@ -5,38 +5,40 @@ namespace App\Factory;
 use App\Parser\ParserInterface;
 
 /**
- * Creates the appropriate parser based on file extension.
- * Supported formats are defined in config/parsers.php.
+ * Resolves the appropriate parser for a given file extension.
+ * Supported formats are defined in config/parsers.php as a flat list of class names.
  */
 class ParserFactory
 {
-    /** @var array<string, class-string<ParserInterface>> */
+    /** @var ParserInterface[] */
     private array $parsers;
 
     /**
-     * @param array<string, class-string<ParserInterface>> $parsers
+     * @param array<int, class-string<ParserInterface>> $parserClasses
      */
-    public function __construct(array $parsers)
+    public function __construct(array $parserClasses)
     {
-        $this->parsers = $parsers;
+        $this->parsers = array_map(fn($class) => new $class(), $parserClasses);
     }
 
     /**
-     * Returns a parser instance for the given file extension.
+     * Returns the parser that supports the given file extension.
      *
      * @param  string $extension
      * @return ParserInterface
-     * @throws \InvalidArgumentException If the format is not supported.
+     * @throws \InvalidArgumentException If no parser supports the format.
      */
     public function create(string $extension): ParserInterface
     {
         $extension = strtolower($extension);
 
-        if (!isset($this->parsers[$extension])) {
-            throw new \InvalidArgumentException("Unsupported file format: $extension");
+        foreach ($this->parsers as $parser) {
+            if ($parser->supports($extension)) {
+                return $parser;
+            }
         }
 
-        return new $this->parsers[$extension]();
+        throw new \InvalidArgumentException("Unsupported file format: $extension");
     }
 
     /**
@@ -46,6 +48,6 @@ class ParserFactory
      */
     public function getSupportedExtensions(): array
     {
-        return array_keys($this->parsers);
+        return array_map(fn($parser) => $parser->getExtension(), $this->parsers);
     }
 }

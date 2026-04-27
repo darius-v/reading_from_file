@@ -11,6 +11,23 @@ use Exception;
 class XmlParser implements ParserInterface
 {
     /**
+     * @param  string $extension
+     * @return bool
+     */
+    public function supports(string $extension): bool
+    {
+        return $extension === 'xml';
+    }
+
+    /**
+     * @return string
+     */
+    public function getExtension(): string
+    {
+        return 'xml';
+    }
+
+    /**
      * @throws Exception
      * @return array<int, array<string, mixed>>
      * @param string $content Raw XML content.
