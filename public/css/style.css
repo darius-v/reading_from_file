@@ -95,7 +95,6 @@ h1 {
     align-items: center;
     justify-content: flex-end; /* pushes children (button) to the right side */
     margin-top: 1rem;
-    flex-wrap: wrap;
 }
 
 .btn {
