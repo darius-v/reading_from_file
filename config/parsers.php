@@ -1,16 +1,15 @@
 <?php
 
 /**
- * List of parser classes to register.
- * To add a new format: create a parser implementing ParserInterface and add its class here.
+ * Auto-discovers all classes in src/Parser/ that implement ParserInterface.
+ * To add a new format: create a parser implementing ParserInterface in src/Parser/ — no config change needed.
  */
 
-use App\Parser\CsvParser;
-use App\Parser\JsonParser;
-use App\Parser\XmlParser;
+use App\Parser\ParserDiscovery;
 
-return [
-    CsvParser::class,
-    XmlParser::class,
-    JsonParser::class,
-];
+$discovery = new ParserDiscovery(
+    __DIR__ . '/../src/Parser',
+    'App\\Parser'
+);
+
+return $discovery->discover();
