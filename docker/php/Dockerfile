@@ -5,4 +5,5 @@ RUN pecl install xdebug \
 
 COPY xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
 
+# Sets the default directory when shelling into the container. The actual mount is defined in docker-compose.yml.
 WORKDIR /var/www/html
