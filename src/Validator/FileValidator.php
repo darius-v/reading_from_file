@@ -21,35 +21,32 @@ class FileValidator
     }
 
     /**
-     * Validates the uploaded file and returns a list of errors.
+     * Validates the uploaded file and returns the first error message, or null if valid.
      *
      * @param  array $file Entry from $_FILES.
-     * @return string[]
+     * @return string|null
      */
-    public function validate(array $file): array
+    public function validate(array $file): ?string
     {
-        $errors = [];
-
         if (!isset($file['error']) || $file['error'] !== UPLOAD_ERR_OK) {
-            $errors[] = 'No file uploaded or upload failed.';
-            return $errors;
+            return 'No file uploaded or upload failed.';
         }
 
         if (empty($file['size'])) {
-            $errors[] = 'The uploaded file is empty.';
+            return 'The uploaded file is empty.';
         }
 
         $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
         $supported = $this->parserFactory->getSupportedExtensions();
 
         if (!in_array($extension, $supported, true)) {
-            $errors[] = sprintf(
+            return sprintf(
                 'Unsupported file format ".%s". Allowed: %s.',
                 $extension,
                 implode(', ', $supported)
             );
         }
 
-        return $errors;
+        return null;
     }
 }

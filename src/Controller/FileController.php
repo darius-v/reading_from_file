@@ -31,11 +31,11 @@ class FileController
      */
     public function index(): void
     {
-        $errors = [];
-        $rows   = [];
+        $error = null;
+        $rows  = [];
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            [$errors, $rows] = $this->handleUpload();
+            [$error, $rows] = $this->handleUpload();
         }
 
         $supported = $this->parserFactory->getSupportedExtensions();
@@ -46,15 +46,15 @@ class FileController
     /**
      * Validates the uploaded file and parses its contents.
      *
-     * @return array{0: string[], 1: array<int, array<string, mixed>>}
+     * @return array{0: string|null, 1: array<int, array<string, mixed>>}
      */
     private function handleUpload(): array
     {
-        $file   = $_FILES['file'] ?? [];
-        $errors = $this->validator->validate($file);
+        $file  = $_FILES['file'] ?? [];
+        $error = $this->validator->validate($file);
 
-        if (!empty($errors)) {
-            return [$errors, []];
+        if ($error !== null) {
+            return [$error, []];
         }
 
         $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
@@ -63,9 +63,9 @@ class FileController
             $parser = $this->parserFactory->create($extension);
             $rows   = $parser->parse(file_get_contents($file['tmp_name']));
         } catch (\InvalidArgumentException $e) {
-            return [[$e->getMessage()], []];
+            return [$e->getMessage(), []];
         }
 
-        return [[], $rows];
+        return [null, $rows];
     }
 }

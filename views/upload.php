@@ -10,12 +10,8 @@
     <div class="container">
         <h1>File Reader</h1>
 
-        <?php if (!empty($errors)): ?>
-            <ul class="errors">
-                <?php foreach ($errors as $error): ?>
-                    <li><?= htmlspecialchars($error) ?></li>
-                <?php endforeach; ?>
-            </ul>
+        <?php if ($error !== null): ?>
+            <p class="error"><?= htmlspecialchars($error) ?></p>
         <?php endif; ?>
 
         <div class="card">
