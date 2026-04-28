@@ -1,32 +1,35 @@
 const fileInput = document.getElementById('file-input');
-const label = document.getElementById('upload-label');
+const dragDropArea = document.getElementById('upload-label');
 const fileNameEl = document.getElementById('file-name');
 
+// change fired when user clicks on drag drop area and selects file
 fileInput.addEventListener('change', () => {
     fileNameEl.textContent = fileInput.files[0].name;
     fileNameEl.hidden = false;
+    console.log('change')
 });
 
-label.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    label.style.borderColor = '#6366f1';
-    label.style.background = '#f5f3ff';
+// on dragging file to upload area
+dragDropArea.addEventListener('dragover', (e) => {
+    e.preventDefault(); // without this, the browser opens the file directly instead of firing the drop event
+    dragDropArea.style.borderColor = '#6366f1';
+    dragDropArea.style.background = '#f5f3ff';
 });
 
-label.addEventListener('dragleave', () => {
-    label.style.borderColor = '';
-    label.style.background = '';
+dragDropArea.addEventListener('dragleave', () => {
+    dragDropArea.style.borderColor = '';
+    dragDropArea.style.background = '';
 });
 
-label.addEventListener('drop', (e) => {
-    e.preventDefault();
-    label.style.borderColor = '';
-    label.style.background = '';
+dragDropArea.addEventListener('drop', (e) => {
+    e.preventDefault(); // without this, the browser opens the file directly instead of firing the drop event
+    dragDropArea.style.borderColor = '';
+    dragDropArea.style.background = '';
     const file = e.dataTransfer.files[0];
-    if (file) {
-        const dt = new DataTransfer();
-        dt.items.add(file);
-        fileInput.files = dt.files;
+    if (file) { // file might be undefined if user drops selected text, for example.
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        fileInput.files = dataTransfer.files;
         fileNameEl.textContent = file.name;
         fileNameEl.hidden = false;
     }
