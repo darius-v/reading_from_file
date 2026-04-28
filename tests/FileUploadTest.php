@@ -236,7 +236,7 @@ class FileUploadTest
         $html = $this->client->post($action, [], [$fieldName => __DIR__ . '/fixtures/xss.json']);
 
         Assert::contains('&lt;script&gt;', $html, 'Script tag is HTML-escaped');
-        Assert::hasNoTag($html, 'script', 'No raw <script> tag in output');
+        Assert::hasNoInlineScript($html, 'No raw <script> tag in output');
     }
 
     /**

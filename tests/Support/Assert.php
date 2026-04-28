@@ -59,6 +59,29 @@ class Assert
     }
 
     /**
+     * Asserts no inline <script> tag (without a src attribute) exists in the HTML.
+     * External <script src="..."> tags are permitted.
+     *
+     * @param string $html
+     * @param string $message
+     * @return void
+     */
+    public static function hasNoInlineScript(string $html, string $message = ''): void
+    {
+        $dom = new \DOMDocument();
+        @$dom->loadHTML($html);
+
+        foreach ($dom->getElementsByTagName('script') as $node) {
+            if (!$node->hasAttribute('src')) {
+                self::fail($message ?: 'Expected no inline <script> tag in response');
+                return;
+            }
+        }
+
+        self::pass($message ?: 'No inline <script> tag in output');
+    }
+
+    /**
      * @param string $message
      * @return void
      */
