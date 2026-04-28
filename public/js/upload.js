@@ -1,13 +1,10 @@
-const input = document.getElementById('file-input');
+const fileInput = document.getElementById('file-input');
 const label = document.getElementById('upload-label');
 const fileNameEl = document.getElementById('file-name');
 
-input.addEventListener('change', () => {
-    const file = input.files[0];
-    if (file) {
-        fileNameEl.textContent = file.name;
-        fileNameEl.hidden = false;
-    }
+fileInput.addEventListener('change', () => {
+    fileNameEl.textContent = fileInput.files[0].name;
+    fileNameEl.hidden = false;
 });
 
 label.addEventListener('dragover', (e) => {
@@ -29,7 +26,7 @@ label.addEventListener('drop', (e) => {
     if (file) {
         const dt = new DataTransfer();
         dt.items.add(file);
-        input.files = dt.files;
+        fileInput.files = dt.files;
         fileNameEl.textContent = file.name;
         fileNameEl.hidden = false;
     }
