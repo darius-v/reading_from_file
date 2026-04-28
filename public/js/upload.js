@@ -25,6 +25,7 @@
         // change fired when user clicks on drag drop area and selects file
         fileInput.addEventListener('change', () => {
             showFileName(fileNameEl, fileInput.files[0].name);
+            fileInput.form.submit();
         });
 
         dragDropArea.addEventListener('drop', (e) => {
@@ -37,6 +38,7 @@
                 dataTransfer.items.add(file);
                 fileInput.files = dataTransfer.files;
                 showFileName(fileNameEl, file.name);
+                fileInput.form.submit();
             }
         });
     }

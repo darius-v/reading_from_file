@@ -31,9 +31,6 @@
                     <span class="accepted-file-formats"><?= implode(' · ', array_map('strtoupper', $supported)) ?></span>
                     <span class="file-name" id="file-name" hidden></span>
                 </label>
-                <div class="form-footer">
-                    <button class="btn btn-primary" type="submit">Upload</button>
-                </div>
             </form>
         </div>
 

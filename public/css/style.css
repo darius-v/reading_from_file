@@ -89,36 +89,6 @@ h1 {
     word-break: break-all;
 }
 
-.form-footer {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end; /* pushes children (button) to the right side */
-    margin-top: 1rem;
-}
-
-.btn {
-    padding: .6rem 1.4rem;
-    font-size: .9375rem;
-    font-weight: 600;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background .15s, transform .1s;
-}
-
-/* triggers while the mouse button is held down — gives a visual "pressed" effect */
-.btn:active {
-    transform: scale(.97);
-}
-
-.btn-primary {
-    background: #6366f1;
-    color: #fff;
-}
-
-.btn-primary:hover {
-    background: #4f46e5;
-}
 
 .error {
     background: #fef2f2;
