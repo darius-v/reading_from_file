@@ -2,11 +2,14 @@ const fileInput = document.getElementById('file-input');
 const dragDropArea = document.getElementById('upload-label');
 const fileNameEl = document.getElementById('file-name');
 
+function showFileName(el, name) {
+    el.textContent = name;
+    el.hidden = false;
+}
+
 // change fired when user clicks on drag drop area and selects file
 fileInput.addEventListener('change', () => {
-    fileNameEl.textContent = fileInput.files[0].name;
-    fileNameEl.hidden = false;
-    console.log('change')
+    showFileName(fileNameEl, fileInput.files[0].name);
 });
 
 // on dragging file to upload area
@@ -30,7 +33,6 @@ dragDropArea.addEventListener('drop', (e) => {
         const dataTransfer = new DataTransfer();
         dataTransfer.items.add(file);
         fileInput.files = dataTransfer.files;
-        fileNameEl.textContent = file.name;
-        fileNameEl.hidden = false;
+        showFileName(fileNameEl, file.name);
     }
 });
