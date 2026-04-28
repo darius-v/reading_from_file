@@ -93,8 +93,7 @@ h1 {
 .form-footer {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    gap: 1rem;
+    justify-content: flex-end; /* pushes children (button) to the right side */
     margin-top: 1rem;
     flex-wrap: wrap;
 }
