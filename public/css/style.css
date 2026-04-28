@@ -34,7 +34,6 @@ h1 {
     margin-bottom: 1.5rem;
 }
 
-/* Upload zone */
 .upload-label {
     /* flex + column + align-items centers children (icon, text) vertically with gap spacing between them */
     display: flex;
@@ -121,7 +120,6 @@ h1 {
     background: #4f46e5;
 }
 
-/* Error */
 .error {
     background: #fef2f2;
     border: 1px solid #fecaca;
@@ -132,17 +130,18 @@ h1 {
     margin-bottom: 1.5rem;
 }
 
-/* Table */
 .table-wrapper {
+    /* adds scrollbar on narrow screen */
     overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
     border-radius: 10px;
 }
 
 table {
     width: 100%;
+    /* merges cell borders into one — without this there are double borders between cells */
     border-collapse: collapse;
     font-size: .9rem;
+    /* prevents cell content from wrapping — table scrolls horizontally instead (handled by .table-wrapper) */
     white-space: nowrap;
 }
 
@@ -180,12 +179,7 @@ tbody tr:hover {
         padding: 1.75rem 1rem;
     }
 
-    .form-footer {
-        justify-content: stretch;
-    }
-
     .btn {
         width: 100%;
-        justify-content: center;
     }
 }
