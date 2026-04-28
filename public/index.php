@@ -4,10 +4,11 @@ require __DIR__ . '/../autoload.php';
 
 use App\Controller\FileController;
 use App\Factory\ParserFactory;
+use App\Parser\ParserDiscovery;
 use App\Validator\FileValidator;
 
-$parsers   = require __DIR__ . '/../config/parsers.php';
-$factory   = new ParserFactory($parsers);
+$discovery = new ParserDiscovery(__DIR__ . '/../src/Parser', 'App\\Parser');
+$factory   = new ParserFactory($discovery->discover());
 $validator = new FileValidator($factory);
 
 $controller = new FileController($factory, $validator);
