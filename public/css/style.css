@@ -73,6 +73,9 @@ h1 {
     letter-spacing: .05em;
 }
 
+/* Hides the native file input visually — the styled label acts as the clickable zone instead.
+   Clicking anywhere on the label triggers this input (standard HTML label+input association), so size does not matter.
+   position: absolute removes it from layout flow so it doesn't push other elements. */
 .file-input {
     position: absolute;
     width: 1px;
