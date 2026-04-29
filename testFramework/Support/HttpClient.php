@@ -14,7 +14,7 @@ class HttpClient
     public function get(string $url): string
     {
         $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // return response as string instead of printing it
         return curl_exec($ch);
     }
 
@@ -33,7 +33,7 @@ class HttpClient
         }
 
         $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); // return response as string instead of printing it
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
 
