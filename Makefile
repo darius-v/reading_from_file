@@ -13,4 +13,4 @@ bash:
 	docker compose exec php bash
 
 test:
-	docker compose exec php php /var/www/html/testFramework/run.php http://nginx:80
+	docker compose exec -e PHP_IDE_CONFIG="serverName=localhost" -e XDEBUG_SESSION=PHPSTORM php php /var/www/html/testFramework/run.php http://nginx:80

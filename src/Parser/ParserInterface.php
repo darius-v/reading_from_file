@@ -10,8 +10,14 @@ interface ParserInterface
     /**
      * Parses raw file content into an array of rows.
      *
+     * Example return value:
+     * [
+     *   ['first_name' => 'Alice', 'age' => '30'],
+     *   ['first_name' => 'Bob', 'age' => '25'],
+     * ]
+     *
      * @param  string $content Raw file content.
-     * @return array<int, array<string, mixed>> Associative rows keyed by column name.
+     * @return array<int, array<string, mixed>>
      */
     public function parse(string $content): array;
 
