@@ -8,17 +8,13 @@ use App\Parser\ParserInterface;
 /**
  * Resolves the appropriate parser for a given file extension.
  */
-class ParserFactory
+readonly class ParserFactory
 {
-    /** @var ParserInterface[] */
-    private array $parsers;
-
     /**
      * @param ParserDiscovery $discovery
      */
-    public function __construct(ParserDiscovery $discovery)
+    public function __construct(public ParserDiscovery $discovery)
     {
-        $this->parsers = array_map(fn($class) => new $class(), $discovery->discover());
     }
 
     /**
@@ -32,7 +28,7 @@ class ParserFactory
     {
         $extension = strtolower($extension);
 
-        foreach ($this->parsers as $parser) {
+        foreach ($this->buildParserInstances($this->discovery->discover()) as $parser) {
             if ($parser->supports($extension)) {
                 return $parser;
             }
@@ -42,12 +38,24 @@ class ParserFactory
     }
 
     /**
-     * Returns list of supported file extensions.
+     * Returns a list of supported file extensions.
      *
      * @return array<int, string>
      */
     public function getSupportedExtensions(): array
     {
-        return array_map(fn($parser) => $parser->getExtension(), $this->parsers);
+        return array_map(
+            fn($parser) => $parser->getExtension(),
+            $this->buildParserInstances($this->discovery->discover())
+        );
+    }
+
+    /**
+     * @param array $parsersClassNames
+     * @return ParserInterface[]
+     */
+    private function buildParserInstances(array $parsersClassNames): array
+    {
+        return array_map(fn($class) => new $class(), $parsersClassNames);
     }
 }
