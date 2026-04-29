@@ -16,8 +16,7 @@ class FormParser
      */
     public static function extractFileInputName(string $html): string
     {
-        $dom = new \DOMDocument();
-        @$dom->loadHTML($html);
+        $dom = Dom::parse($html);
 
         foreach ($dom->getElementsByTagName('input') as $input) {
             if ($input->getAttribute('type') === 'file') {
@@ -38,8 +37,7 @@ class FormParser
      */
     public static function extractFormAction(string $html, string $baseUrl): string
     {
-        $dom = new \DOMDocument();
-        @$dom->loadHTML($html);
+        $dom = Dom::parse($html);
 
         $forms = $dom->getElementsByTagName('form');
 

@@ -33,7 +33,7 @@ class Assert
      */
     public static function hasTag(string $html, string $tag, string $message = ''): void
     {
-        $dom = self::parseDom($html);
+        $dom = Dom::parse($html);
 
         if ($dom->getElementsByTagName($tag)->length > 0) {
             self::pass($message ?: "Has tag <$tag>");
@@ -50,7 +50,7 @@ class Assert
      */
     public static function hasNoTag(string $html, string $tag, string $message = ''): void
     {
-        $dom = self::parseDom($html);
+        $dom = Dom::parse($html);
 
         if ($dom->getElementsByTagName($tag)->length === 0) {
             self::pass($message ?: "Has no tag <$tag>");
@@ -69,7 +69,7 @@ class Assert
      */
     public static function hasNoInlineScript(string $html, string $message = ''): void
     {
-        $dom = self::parseDom($html);
+        $dom = Dom::parse($html);
 
         foreach ($dom->getElementsByTagName('script') as $node) {
             if (!$node->hasAttribute('src')) {
@@ -110,20 +110,6 @@ class Assert
         } else {
             echo "\033[31m" . self::$failed . " failed, " . self::$passed . " passed.\033[0m\n";
         }
-    }
-
-    /**
-     * @param string $html
-     * @return \DOMDocument
-     */
-    private static function parseDom(string $html): \DOMDocument
-    {
-        $dom = new \DOMDocument();
-        // loadHTML emits warnings for minor HTML issues (missing doctype, etc.) — suppress them cleanly.
-        libxml_use_internal_errors(true);
-        $dom->loadHTML($html);
-        libxml_clear_errors();
-        return $dom;
     }
 
     private static function pass(string $message): void
