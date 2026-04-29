@@ -2,29 +2,25 @@
 
 namespace App\Controller;
 
-use App\Factory\ParserFactory;
 use App\Http\Request;
-use App\Validator\FileValidator;
+use App\Service\FileUploadService;
 
 /**
  * Handles file upload and parsed data display.
  */
 class FileController
 {
-    private ParserFactory $parserFactory;
-    private FileValidator $validator;
+    private FileUploadService $service;
     private Request $request;
 
     /**
-     * @param ParserFactory $parserFactory
-     * @param FileValidator $validator
-     * @param Request       $request
+     * @param FileUploadService $fileUploadService
+     * @param Request           $request
      */
-    public function __construct(ParserFactory $parserFactory, FileValidator $validator, Request $request)
+    public function __construct(FileUploadService $fileUploadService, Request $request)
     {
-        $this->parserFactory = $parserFactory;
-        $this->validator     = $validator;
-        $this->request       = $request;
+        $this->service = $fileUploadService;
+        $this->request = $request;
     }
 
     /**
@@ -39,37 +35,17 @@ class FileController
         $rows  = [];
 
         if ($this->request->getMethod() === 'POST') {
-            [$error, $rows] = $this->handleUpload();
+            try {
+                [$error, $rows] = $this->service->process($this->request->getFile('file'));
+            } catch (\RuntimeException) {
+                // Not a possible case from UI, the user cannot submit a form without a file.
+                // But possible with tools like curl.
+                $error = 'No file uploaded or upload failed.';
+            }
         }
 
-        $supported = $this->parserFactory->getSupportedExtensions();
+        $supported = $this->service->getSupportedExtensions();
 
         require __DIR__ . '/../../views/upload.php';
-    }
-
-    /**
-     * Validates the uploaded file and parses its contents.
-     *
-     * @return array{0: string|null, 1: array<int, array<string, mixed>>}
-     */
-    private function handleUpload(): array
-    {
-        $file  = $this->request->getFile('file');
-        $error = $this->validator->validate($file);
-
-        if ($error !== null) {
-            return [$error, []];
-        }
-
-        $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-
-        try {
-            $parser = $this->parserFactory->create($extension);
-            $rows   = $parser->parse(file_get_contents($file['tmp_name']));
-        } catch (\InvalidArgumentException $e) {
-            return [$e->getMessage(), []];
-        }
-
-        return [null, $rows];
     }
 }
