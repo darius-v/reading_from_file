@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Factory\ParserFactory;
+use App\Http\Request;
 use App\Validator\FileValidator;
 
 /**
@@ -12,15 +13,18 @@ class FileController
 {
     private ParserFactory $parserFactory;
     private FileValidator $validator;
+    private Request $request;
 
     /**
      * @param ParserFactory $parserFactory
      * @param FileValidator $validator
+     * @param Request       $request
      */
-    public function __construct(ParserFactory $parserFactory, FileValidator $validator)
+    public function __construct(ParserFactory $parserFactory, FileValidator $validator, Request $request)
     {
         $this->parserFactory = $parserFactory;
         $this->validator     = $validator;
+        $this->request       = $request;
     }
 
     /**
@@ -34,7 +38,7 @@ class FileController
         $error = null;
         $rows  = [];
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($this->request->getMethod() === 'POST') {
             [$error, $rows] = $this->handleUpload();
         }
 
@@ -50,7 +54,7 @@ class FileController
      */
     private function handleUpload(): array
     {
-        $file  = $_FILES['file'] ?? [];
+        $file  = $this->request->getFile('file');
         $error = $this->validator->validate($file);
 
         if ($error !== null) {
