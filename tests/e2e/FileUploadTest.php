@@ -1,10 +1,10 @@
 <?php
 
-namespace Tests;
+namespace Tests\e2e;
 
-use Tests\Support\Assert;
-use Tests\Support\FormParser;
-use Tests\Support\HttpClient;
+use TestFramework\Support\Assert;
+use TestFramework\Support\FormParser;
+use TestFramework\Support\HttpClient;
 
 /**
  * Tests for the file upload form and table rendering.
