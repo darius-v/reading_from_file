@@ -4,6 +4,9 @@ use TestFramework\Support\Assert;
 use Tests\e2e\FileUploadTest;
 use Tests\unit\Parser\Format\CsvParserTest;
 
+// Registers a PSR-4 autoloader — instead of manually require-ing every file upfront, PHP calls this function
+// automatically the moment it encounters an unknown class name. The file is only loaded when the class is first used,
+// so if a test never instantiates XmlParser, that file is never loaded.
 spl_autoload_register(function (string $className): void {
     $map = [
         'TestFramework\\' => __DIR__ . '/',
