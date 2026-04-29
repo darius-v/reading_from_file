@@ -7,7 +7,7 @@ namespace App\Parser;
  */
 class ParserDiscovery
 {
-    private const string DIRECTORY      = __DIR__ . '/Format';
+    private const string DIRECTORY = __DIR__ . '/Format';
     private const string PARSER_NAMESPACE = 'App\\Parser\\Format';
 
     /**
@@ -19,10 +19,13 @@ class ParserDiscovery
     {
         $found = [];
 
-        foreach (glob(self::DIRECTORY . '/*.php') as $file) {
-            $fqcn = self::PARSER_NAMESPACE . '\\' . basename($file, '.php');
+        $pathNamesMatchingPattern = glob(self::DIRECTORY . '/*.php');
 
-            // class_exists triggers the autoloader and returns false for interfaces
+        foreach ($pathNamesMatchingPattern as $file) {
+
+            $fileNameWithoutExtension = basename($file, '.php');
+            $fqcn = self::PARSER_NAMESPACE . '\\' . $fileNameWithoutExtension;
+
             if (class_exists($fqcn) && is_a($fqcn, ParserInterface::class, true)) {
                 $found[] = $fqcn;
             }
