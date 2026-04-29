@@ -281,6 +281,31 @@ class FileUploadTest
     }
 
     /**
+     * Verifies that a row with only commas (all empty values) renders as empty cells.
+     *
+     * @return void
+     */
+    public function testCsvEmptyRowRendersEmptyCells(): void
+    {
+        echo "testCsvEmptyRowRendersEmptyCells\n";
+
+        $formHtml  = $this->client->get($this->baseUrl . '/');
+        $action    = FormParser::extractFormAction($formHtml, $this->baseUrl);
+        $fieldName = FormParser::extractFileInputName($formHtml);
+
+        $html = $this->client->post(
+            $action,
+            [],
+            [$fieldName => __DIR__ . '/fixtures/empty_row.csv']
+        );
+
+        Assert::hasTag($html, 'table', 'Response contains a table');
+        Assert::contains('<td>Kiestis</td>', $html, 'Table contains first data row');
+        Assert::contains('<td>CsvUser</td>', $html, 'Table contains second data row');
+        Assert::contains('<td></td>', $html, 'Empty-value row renders as empty cells');
+    }
+
+    /**
      * Runs all tests in this class.
      *
      * @return void
@@ -299,5 +324,6 @@ class FileUploadTest
         $this->testXssInValuesIsEscaped();
         $this->testNestedJsonObjectRendersAsString();
         $this->testNullAndBooleanJsonValues();
+        $this->testCsvEmptyRowRendersEmptyCells();
     }
 }

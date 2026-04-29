@@ -15,12 +15,12 @@ class CsvParser implements ParserInterface
      */
     public function parse(string $content): array
     {
-        $lines = array_filter(explode("\n", trim($content)));
+        $lines = explode("\n", trim($content));
         $rows  = array_map(fn($line) => $this->parseLine($line), array_values($lines));
 
         $headers = array_shift($rows);
 
-        return array_map(fn($row) => array_combine($headers, $row), $rows);
+        return array_map(fn($row) => array_combine($headers, array_pad($row, count($headers), '')), $rows);
     }
 
     /**
