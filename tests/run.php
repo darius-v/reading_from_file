@@ -3,6 +3,7 @@
 /** PSR-4 autoloader for Tests\ namespace */
 
 use Tests\FileUploadTest;
+use Tests\Support\Assert;
 
 spl_autoload_register(function (string $className): void {
     $map = [
@@ -34,3 +35,5 @@ foreach ($tests as $suite) {
     $suite->run();
     echo "\n";
 }
+
+Assert::summary();

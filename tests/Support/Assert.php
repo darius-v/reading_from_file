@@ -7,6 +7,9 @@ namespace Tests\Support;
  */
 class Assert
 {
+    private static int $passed = 0;
+    private static int $failed = 0;
+
     /**
      * @param string $needle
      * @param string $haystack
@@ -85,8 +88,25 @@ class Assert
      * @param string $message
      * @return void
      */
+    /**
+     * Prints a summary line: green if all passed, red if any failed.
+     *
+     * @return void
+     */
+    public static function summary(): void
+    {
+        $total = self::$passed + self::$failed;
+
+        if (self::$failed === 0) {
+            echo "\033[32mAll $total assertions passed.\033[0m\n";
+        } else {
+            echo "\033[31m" . self::$failed . " failed, " . self::$passed . " passed.\033[0m\n";
+        }
+    }
+
     private static function pass(string $message): void
     {
+        self::$passed++;
         echo "\033[32m  ✓ $message\033[0m\n";
     }
 
@@ -96,6 +116,7 @@ class Assert
      */
     private static function fail(string $message): void
     {
+        self::$failed++;
         echo "\033[31m  ✗ $message\033[0m\n";
     }
 }
