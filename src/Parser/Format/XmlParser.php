@@ -42,6 +42,7 @@ class XmlParser implements ParserInterface
             libxml_clear_errors();
             throw new \InvalidArgumentException('Invalid XML: ' . $e->getMessage());
         } finally {
+            // resets it back to false so the rest of the application isn't affected by this parser's setting.
             libxml_use_internal_errors(false);
         }
         $rows = [];

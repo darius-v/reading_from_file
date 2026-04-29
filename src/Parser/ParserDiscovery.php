@@ -3,25 +3,12 @@
 namespace App\Parser;
 
 /**
- * Scans a directory for classes that implement ParserInterface.
+ * Scans the Format directory for classes that implement ParserInterface.
  */
 class ParserDiscovery
 {
-    /** @var string */
-    private string $directory;
-
-    /** @var string */
-    private string $namespace;
-
-    /**
-     * @param string $directory Absolute path to the directory to scan.
-     * @param string $namespace Namespace prefix for classes in that directory.
-     */
-    public function __construct(string $directory, string $namespace)
-    {
-        $this->directory = $directory;
-        $this->namespace = rtrim($namespace, '\\');
-    }
+    private const string DIRECTORY      = __DIR__ . '/Format';
+    private const string PARSER_NAMESPACE = 'App\\Parser\\Format';
 
     /**
      * Returns FQCNs of all instantiable classes implementing ParserInterface.
@@ -31,14 +18,14 @@ class ParserDiscovery
      */
     public function discover(): array
     {
-        if (!is_dir($this->directory) || !is_readable($this->directory)) {
-            throw new \RuntimeException("Parser directory not readable: {$this->directory}");
+        if (!is_dir(self::DIRECTORY) || !is_readable(self::DIRECTORY)) {
+            throw new \RuntimeException('Parser directory not readable: ' . self::DIRECTORY);
         }
 
         $found = [];
 
-        foreach (glob($this->directory . '/*.php') as $file) {
-            $fqcn = $this->namespace . '\\' . basename($file, '.php');
+        foreach (glob(self::DIRECTORY . '/*.php') as $file) {
+            $fqcn = self::PARSER_NAMESPACE . '\\' . basename($file, '.php');
 
             // class_exists triggers the autoloader and returns false for interfaces
             if (class_exists($fqcn) && is_a($fqcn, ParserInterface::class, true)) {

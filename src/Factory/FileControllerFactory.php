@@ -18,7 +18,7 @@ class FileControllerFactory
      */
     public static function create(): FileController
     {
-        $discovery = new ParserDiscovery(__DIR__ . '/../Parser/Format', 'App\\Parser\\Format');
+        $discovery = new ParserDiscovery();
         $factory   = new ParserFactory($discovery);
         $validator = new FileValidator($factory);
         $service   = new FileUploadService($validator, $factory);
