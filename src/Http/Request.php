@@ -11,7 +11,7 @@ readonly class Request
      * @param array<string, mixed> $server
      * @param array<string, mixed> $files
      */
-    public function __construct(public array $server, public array $files)
+    public function __construct(private array $server, private array $files)
     {
     }
 
