@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Parser;
+namespace App\Parser\Format;
+
+use App\Parser\ParserInterface;
 
 /**
  * Parses JSON file content into an array of associative rows.

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Parser;
+namespace App\Parser\Format;
 
-use Exception;
+use App\Parser\ParserInterface;
 
 /**
  * Parses XML file content into an array of associative rows.
