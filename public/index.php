@@ -8,7 +8,7 @@ use App\Parser\ParserDiscovery;
 use App\Validator\FileValidator;
 
 $discovery = new ParserDiscovery(__DIR__ . '/../src/Parser', 'App\\Parser');
-$factory   = new ParserFactory($discovery->discover());
+$factory   = new ParserFactory($discovery);
 $validator = new FileValidator($factory);
 
 $controller = new FileController($factory, $validator);

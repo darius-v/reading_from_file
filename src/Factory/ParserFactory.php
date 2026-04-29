@@ -2,11 +2,11 @@
 
 namespace App\Factory;
 
+use App\Parser\ParserDiscovery;
 use App\Parser\ParserInterface;
 
 /**
  * Resolves the appropriate parser for a given file extension.
- * Supported formats are defined in config/parsers.php as a flat list of class names.
  */
 class ParserFactory
 {
@@ -14,11 +14,11 @@ class ParserFactory
     private array $parsers;
 
     /**
-     * @param array<int, class-string<ParserInterface>> $parserClasses
+     * @param ParserDiscovery $discovery
      */
-    public function __construct(array $parserClasses)
+    public function __construct(ParserDiscovery $discovery)
     {
-        $this->parsers = array_map(fn($class) => new $class(), $parserClasses);
+        $this->parsers = array_map(fn($class) => new $class(), $discovery->discover());
     }
 
     /**
