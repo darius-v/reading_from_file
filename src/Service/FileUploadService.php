@@ -50,7 +50,7 @@ class FileUploadService
     }
 
     /**
-     * Returns list of supported file extensions.
+     * Returns a list of supported file extensions.
      *
      * @return array<int, string>
      */

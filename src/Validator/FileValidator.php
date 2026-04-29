@@ -28,10 +28,6 @@ class FileValidator
      */
     public function validate(array $file): ?string
     {
-        if (!isset($file['error']) || $file['error'] !== UPLOAD_ERR_OK) {
-            return 'No file uploaded or upload failed.';
-        }
-
         if (empty($file['size'])) {
             return 'The uploaded file is empty.';
         }
