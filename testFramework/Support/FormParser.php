@@ -27,26 +27,4 @@ class FormParser
         throw new \RuntimeException('No file input found in form.');
     }
 
-    /**
-     * Returns the resolved action URL of the first form on the page.
-     * Falls back to $baseUrl if the action is empty or relative.
-     *
-     * @param  string $html
-     * @param  string $baseUrl
-     * @return string
-     */
-    public static function extractFormAction(string $html, string $baseUrl): string
-    {
-        $dom = Dom::parse($html);
-
-        $forms = $dom->getElementsByTagName('form');
-
-        if ($forms->length === 0) {
-            throw new \RuntimeException('No form found on page.');
-        }
-
-        $action = $forms->item(0)->getAttribute('action');
-
-        return $action !== '' ? $action : $baseUrl . '/';
-    }
 }

@@ -32,7 +32,7 @@ class FileUploadTest
     {
         echo "testFormIsVisible\n";
 
-        $html = $this->client->get($this->baseUrl . '/');
+        $html = $this->client->get($this->uploadUrl());
 
         Assert::hasTag($html, 'form', 'Page contains a form');
         Assert::contains('multipart/form-data', $html, 'Form has multipart encoding');
@@ -41,7 +41,6 @@ class FileUploadTest
 
     /**
      * Verifies that uploading a CSV file renders a table with the correct data.
-     * Reads the form first to discover the actual file input name and action.
      *
      * @return void
      */
@@ -49,12 +48,11 @@ class FileUploadTest
     {
         echo "testCsvUploadRendersTable\n";
 
-        $formHtml  = $this->client->get($this->baseUrl . '/');
-        $action    = FormParser::extractFormAction($formHtml, $this->baseUrl);
+        $formHtml  = $this->client->get($this->uploadUrl());
         $fieldName = FormParser::extractFileInputName($formHtml);
 
         $html = $this->client->post(
-            $action,
+            $this->uploadUrl(),
             [],
             [$fieldName => __DIR__ . '/fixtures/test.csv']
         );
@@ -70,7 +68,6 @@ class FileUploadTest
 
     /**
      * Verifies that uploading an XML file renders a table with the correct data.
-     * Reads the form first to discover the actual file input name and action.
      *
      * @return void
      */
@@ -78,12 +75,11 @@ class FileUploadTest
     {
         echo "testXmlUploadRendersTable\n";
 
-        $formHtml  = $this->client->get($this->baseUrl . '/');
-        $action    = FormParser::extractFormAction($formHtml, $this->baseUrl);
+        $formHtml  = $this->client->get($this->uploadUrl());
         $fieldName = FormParser::extractFileInputName($formHtml);
 
         $html = $this->client->post(
-            $action,
+            $this->uploadUrl(),
             [],
             [$fieldName => __DIR__ . '/fixtures/test.xml']
         );
@@ -99,7 +95,6 @@ class FileUploadTest
 
     /**
      * Verifies that uploading a JSON file renders a table with the correct data.
-     * Reads the form first to discover the actual file input name and action.
      *
      * @return void
      */
@@ -107,12 +102,11 @@ class FileUploadTest
     {
         echo "testJsonUploadRendersTable\n";
 
-        $formHtml  = $this->client->get($this->baseUrl . '/');
-        $action    = FormParser::extractFormAction($formHtml, $this->baseUrl);
+        $formHtml  = $this->client->get($this->uploadUrl());
         $fieldName = FormParser::extractFileInputName($formHtml);
 
         $html = $this->client->post(
-            $action,
+            $this->uploadUrl(),
             [],
             [$fieldName => __DIR__ . '/fixtures/test.json']
         );
@@ -135,10 +129,7 @@ class FileUploadTest
     {
         echo "testNoFileShowsError\n";
 
-        $formHtml = $this->client->get($this->baseUrl . '/');
-        $action   = FormParser::extractFormAction($formHtml, $this->baseUrl);
-
-        $html = $this->client->post($action);
+        $html = $this->client->post($this->uploadUrl());
 
         Assert::contains('No file uploaded or upload failed.', $html, 'Shows no-file error');
         Assert::hasNoTag($html, 'table', 'No table shown on error');
@@ -153,11 +144,10 @@ class FileUploadTest
     {
         echo "testUnsupportedFormatShowsError\n";
 
-        $formHtml  = $this->client->get($this->baseUrl . '/');
-        $action    = FormParser::extractFormAction($formHtml, $this->baseUrl);
+        $formHtml  = $this->client->get($this->uploadUrl());
         $fieldName = FormParser::extractFileInputName($formHtml);
 
-        $html = $this->client->post($action, [], [$fieldName => __DIR__ . '/fixtures/test.txt']);
+        $html = $this->client->post($this->uploadUrl(), [], [$fieldName => __DIR__ . '/fixtures/test.txt']);
 
         Assert::contains('Unsupported file format', $html, 'Shows unsupported format error');
         Assert::hasNoTag($html, 'table', 'No table shown on error');
@@ -172,11 +162,10 @@ class FileUploadTest
     {
         echo "testEmptyFileShowsError\n";
 
-        $formHtml  = $this->client->get($this->baseUrl . '/');
-        $action    = FormParser::extractFormAction($formHtml, $this->baseUrl);
+        $formHtml  = $this->client->get($this->uploadUrl());
         $fieldName = FormParser::extractFileInputName($formHtml);
 
-        $html = $this->client->post($action, [], [$fieldName => __DIR__ . '/fixtures/empty.csv']);
+        $html = $this->client->post($this->uploadUrl(), [], [$fieldName => __DIR__ . '/fixtures/empty.csv']);
 
         Assert::contains('The uploaded file is empty.', $html, 'Shows empty file error');
         Assert::hasNoTag($html, 'table', 'No table shown on error');
@@ -191,11 +180,10 @@ class FileUploadTest
     {
         echo "testMalformedJsonShowsError\n";
 
-        $formHtml  = $this->client->get($this->baseUrl . '/');
-        $action    = FormParser::extractFormAction($formHtml, $this->baseUrl);
+        $formHtml  = $this->client->get($this->uploadUrl());
         $fieldName = FormParser::extractFileInputName($formHtml);
 
-        $html = $this->client->post($action, [], [$fieldName => __DIR__ . '/fixtures/malformed.json']);
+        $html = $this->client->post($this->uploadUrl(), [], [$fieldName => __DIR__ . '/fixtures/malformed.json']);
 
         Assert::contains('Invalid JSON', $html, 'Shows invalid JSON error');
         Assert::hasNoTag($html, 'table', 'No table shown on error');
@@ -210,11 +198,10 @@ class FileUploadTest
     {
         echo "testMalformedXmlShowsError\n";
 
-        $formHtml  = $this->client->get($this->baseUrl . '/');
-        $action    = FormParser::extractFormAction($formHtml, $this->baseUrl);
+        $formHtml  = $this->client->get($this->uploadUrl());
         $fieldName = FormParser::extractFileInputName($formHtml);
 
-        $html = $this->client->post($action, [], [$fieldName => __DIR__ . '/fixtures/malformed.xml']);
+        $html = $this->client->post($this->uploadUrl(), [], [$fieldName => __DIR__ . '/fixtures/malformed.xml']);
 
         Assert::contains('Invalid XML', $html, 'Shows invalid XML error');
         Assert::hasNoTag($html, 'table', 'No table shown on error');
@@ -229,11 +216,10 @@ class FileUploadTest
     {
         echo "testXssInValuesIsEscaped\n";
 
-        $formHtml  = $this->client->get($this->baseUrl . '/');
-        $action    = FormParser::extractFormAction($formHtml, $this->baseUrl);
+        $formHtml  = $this->client->get($this->uploadUrl());
         $fieldName = FormParser::extractFileInputName($formHtml);
 
-        $html = $this->client->post($action, [], [$fieldName => __DIR__ . '/fixtures/xss.json']);
+        $html = $this->client->post($this->uploadUrl(), [], [$fieldName => __DIR__ . '/fixtures/xss.json']);
 
         Assert::contains('&lt;script&gt;', $html, 'Script tag is HTML-escaped');
         Assert::hasNoInlineScript($html, 'No raw <script> tag in output');
@@ -248,11 +234,10 @@ class FileUploadTest
     {
         echo "testNestedJsonObjectRendersAsString\n";
 
-        $formHtml  = $this->client->get($this->baseUrl . '/');
-        $action    = FormParser::extractFormAction($formHtml, $this->baseUrl);
+        $formHtml  = $this->client->get($this->uploadUrl());
         $fieldName = FormParser::extractFileInputName($formHtml);
 
-        $html = $this->client->post($action, [], [$fieldName => __DIR__ . '/fixtures/nested.json']);
+        $html = $this->client->post($this->uploadUrl(), [], [$fieldName => __DIR__ . '/fixtures/nested.json']);
 
         Assert::hasTag($html, 'table', 'Table is rendered');
         Assert::contains('Vilnius', $html, 'Nested object value is visible');
@@ -268,11 +253,10 @@ class FileUploadTest
     {
         echo "testNullAndBooleanJsonValues\n";
 
-        $formHtml  = $this->client->get($this->baseUrl . '/');
-        $action    = FormParser::extractFormAction($formHtml, $this->baseUrl);
+        $formHtml  = $this->client->get($this->uploadUrl());
         $fieldName = FormParser::extractFileInputName($formHtml);
 
-        $html = $this->client->post($action, [], [$fieldName => __DIR__ . '/fixtures/nullbool.json']);
+        $html = $this->client->post($this->uploadUrl(), [], [$fieldName => __DIR__ . '/fixtures/nullbool.json']);
 
         Assert::hasTag($html, 'table', 'Table is rendered');
         Assert::contains('<td>Kiestis</td>', $html, 'String value renders correctly');
@@ -289,12 +273,11 @@ class FileUploadTest
     {
         echo "testCsvEmptyRowRendersEmptyCells\n";
 
-        $formHtml  = $this->client->get($this->baseUrl . '/');
-        $action    = FormParser::extractFormAction($formHtml, $this->baseUrl);
+        $formHtml  = $this->client->get($this->uploadUrl());
         $fieldName = FormParser::extractFileInputName($formHtml);
 
         $html = $this->client->post(
-            $action,
+            $this->uploadUrl(),
             [],
             [$fieldName => __DIR__ . '/fixtures/empty_row.csv']
         );
@@ -325,5 +308,13 @@ class FileUploadTest
         $this->testNestedJsonObjectRendersAsString();
         $this->testNullAndBooleanJsonValues();
         $this->testCsvEmptyRowRendersEmptyCells();
+    }
+
+    /**
+     * @return string
+     */
+    private function uploadUrl(): string
+    {
+        return $this->baseUrl . '/';
     }
 }
