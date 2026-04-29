@@ -5,22 +5,14 @@ namespace App\Http;
 /**
  * Encapsulates the current HTTP request data.
  */
-class Request
+readonly class Request
 {
-    /** @var array<string, mixed> */
-    private array $server;
-
-    /** @var array<string, mixed> */
-    private array $files;
-
     /**
      * @param array<string, mixed> $server
      * @param array<string, mixed> $files
      */
-    public function __construct(array $server, array $files)
+    public function __construct(public array $server, public array $files)
     {
-        $this->server = $server;
-        $this->files  = $files;
     }
 
     /**
